@@ -29,6 +29,7 @@ import wootrevived.woot.recipes.fluid_infuser.FluidInfuserRecipe;
 import wootrevived.woot.recipes.item_infuser.ItemInfuserRecipe;
 import wootrevived.woot.recipes.stygian_anvil.StygianAnvilRecipe;
 import wootrevived.woot.registries.*;
+import wootrevived.woot.upgrades.filter.FilterScreen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +65,11 @@ public class WootJeiPlugin implements IModPlugin {
             stack.set(WootUpgradeComponent.type(), WootUpgradeComponent.of(constant));
             stacks.add(stack);
         }
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addGhostIngredientHandler(FilterScreen.class, new WootFilterScreenGhostIngredientHandler());
     }
 
     @Override

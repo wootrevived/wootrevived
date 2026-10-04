@@ -9,6 +9,7 @@ import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
 import wootrevived.woot.upgrades.*;
+import wootrevived.woot.upgrades.filter.Filter;
 
 public class SimplifiedChinese extends LanguageProvider {
     public SimplifiedChinese(PackOutput output){
@@ -131,6 +132,9 @@ public class SimplifiedChinese extends LanguageProvider {
 
         add(Burn.BURN_ITEM.get(), "燃烧升级");
         add("info.woot_revived.upgrade.burn.desc.0", "击杀模拟生物时施加燃烧效果");
+
+        add(Filter.FILTER_ITEM.get(), "过滤升级");
+        add("info.woot_revived.upgrade.filter.desc.0", "过滤生成的掉落物");
 
         add(Dimension.NETHER_DIMENSION_ITEM.get(), "下界维度升级");
         add(Dimension.END_DIMENSION_ITEM.get(), "末地维度升级");
@@ -280,6 +284,27 @@ public class SimplifiedChinese extends LanguageProvider {
         add("gui.woot_revived.heart.no_secondary", "未放置副伪刷怪笼");
         add("gui.woot_revived.heart.vitality_cell_missing", "缺失生命单元");
         add("gui.woot_revived.heart.vitality_cell", "生命单元");
+        add("gui.woot_revived.filter.resource", "物品 / 流体 / 标签");
+        add("gui.woot_revived.filter.nbt", "NBT");
+        add("gui.woot_revived.filter.item", "物品");
+        add("gui.woot_revived.filter.fluid", "流体");
+        add("gui.woot_revived.filter.tag", "标签");
+        add("gui.woot_revived.filter.exact", "精确");
+        add("gui.woot_revived.filter.inverted", "反向");
+        add("gui.woot_revived.filter.not", "非 %s");
+        add("gui.woot_revived.filter.nbt_tags", "NBT标签：%d");
+        add("gui.woot_revived.filter.exact_nbt", "精确NBT");
+        add("gui.woot_revived.filter.button.add", "添加");
+        add("gui.woot_revived.filter.button.edit", "编辑");
+        add("gui.woot_revived.filter.button.remove", "移除");
+        add("gui.woot_revived.filter.button.confirm", "确认");
+        add("gui.woot_revived.filter.button.cancel", "取消");
+        add("gui.woot_revived.filter.nbt.only", "仅匹配提供的标签");
+        add("gui.woot_revived.filter.nbt.exact", "精确匹配NBT数据");
+        add("gui.woot_revived.filter.mode.whitelist", "过滤模式：白名单");
+        add("gui.woot_revived.filter.mode.blacklist", "过滤模式：黑名单");
+        add("gui.woot_revived.filter.mode.regular", "常规");
+        add("gui.woot_revived.filter.mode.inverted", "反向");
 
         add("jei.woot_revived.shard", "由装有碎片掉落升级的工厂产出。");
         add("jei.woot_revived.anvil.0", "对幽冥砧右击来添加物品。");

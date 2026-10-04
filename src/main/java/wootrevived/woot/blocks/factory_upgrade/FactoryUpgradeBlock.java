@@ -2,6 +2,7 @@ package wootrevived.woot.blocks.factory_upgrade;
 
 import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -62,17 +63,21 @@ public class FactoryUpgradeBlock extends FactoryBlockBase {
             if(!getValue(BlockStateProperties.ENABLED))
                 return super.useItemOn(stack, level, player, hand, hit);
 
-            BlockEntity blockEntity = level.getBlockEntity(hit.getBlockPos());
-            if (!level.isClientSide() && blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity) {
-                if(stack.isEmpty() && player.isShiftKeyDown()){
-                    factoryUpgradeBlockEntity.removeUpgrade(level, player, hand);
-                    return InteractionResult.SUCCESS;
-                } else if (!stack.isEmpty() && stack.getItem() instanceof WootUpgradeItem<?> upgradeItem) {
-                    factoryUpgradeBlockEntity.addUpgrade(level, player, hand, stack, upgradeItem);
-                    return InteractionResult.SUCCESS;
-                } else {
-                    return factoryUpgradeBlockEntity.interactUpgrade(stack, level, player, hand, hit);
-                }
+            if (level.isClientSide())
+                return InteractionResult.SUCCESS;
+
+            if (!(level.getBlockEntity(hit.getBlockPos()) instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity))
+                throw new IllegalStateException("BlockEntity is missing");
+
+            if(stack.isEmpty() && player.isShiftKeyDown()){
+                factoryUpgradeBlockEntity.removeUpgrade(level, player, hand);
+                return InteractionResult.SUCCESS;
+            } else if (!stack.isEmpty() && stack.getItem() instanceof WootUpgradeItem<?> upgradeItem) {
+                factoryUpgradeBlockEntity.addUpgrade(level, player, hand, stack, upgradeItem);
+                return InteractionResult.SUCCESS;
+            } else if (stack.isEmpty() && factoryUpgradeBlockEntity.hasMenu()) {
+                factoryUpgradeBlockEntity.openMenu((ServerPlayer) player);
+                return InteractionResult.SUCCESS;
             }
 
             return super.useItemOn(stack, level, player, hand, hit);
