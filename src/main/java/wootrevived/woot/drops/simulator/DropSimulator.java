@@ -59,6 +59,10 @@ public class DropSimulator {
         return INSTANCE.dimensionLevel;
     }
 
+    public static boolean isLevel(Level level) {
+        return INSTANCE.dimensionLevel == level;
+    }
+
     public static @NotNull RandomSource getRandom() {
         return INSTANCE.dimensionLevel.getRandom();
     }
