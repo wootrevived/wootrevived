@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.ValueInput;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,7 @@ import wootrevived.woot.blocks.cell.CellBlockEntity;
 import wootrevived.woot.blocks.factory_upgrade.FactoryUpgradeBlockEntity;
 import wootrevived.woot.blocks.fake_spawner.FakeSpawnerBlockEntity;
 import wootrevived.woot.blocks.heart.HeartBlockEntity;
+import wootrevived.woot.network.WootOpenUpgradeMenu;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.util.render.WootSlot;
 import wootrevived.woot.util.render.WootSlotItemHandler;
@@ -38,6 +40,7 @@ public class HeartContainerMenu extends AbstractContainerMenu {
 
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate){
+            ClientPacketDistributor.sendToServer(new WootOpenUpgradeMenu(blockEntity.getBlockPos(), slot));
             return ItemStack.EMPTY;
         }
 
