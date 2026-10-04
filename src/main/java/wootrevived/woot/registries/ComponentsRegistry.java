@@ -17,6 +17,7 @@ import wootrevived.woot.data.*;
 import wootrevived.woot.items.mob_shard.MobShardItem;
 import wootrevived.woot.items.xp.XpItem;
 import wootrevived.woot.upgrades.*;
+import wootrevived.woot.upgrades.filter.FilterLogic;
 
 public class ComponentsRegistry {
     public static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, Woot.MOD_NAMESPACE);
@@ -29,6 +30,14 @@ public class ComponentsRegistry {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<WootUpgradeComponent>> WOOT_UPGRADE_COMPONENT =
             DATA_COMPONENTS.register(WootUpgradeComponent.ID, WootUpgradeComponent::type);
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<FilterLogic.Component>> FILTER_LOGIC_DATA =
+            DATA_COMPONENTS.registerComponentType(
+                    FilterLogic.ID,
+                    builder -> builder
+                            .persistent(FilterLogic.Component.CODEC)
+                            .networkSynchronized(FilterLogic.Component.STREAM_CODEC)
+            );
 
     /* Block Entity Data */
 

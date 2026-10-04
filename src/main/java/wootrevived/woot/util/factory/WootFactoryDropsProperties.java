@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.WootUpgradeItem;
@@ -137,12 +137,12 @@ public class WootFactoryDropsProperties implements WootDropsProperties {
     }
 
     @Override
-    public @NotNull CompoundTag getSpawnContextData() {
+    public @NonNull CompoundTag getSpawnContextData() {
         return wootSpawnProperties.getSpawnContextData();
     }
 
     @Override
-    public @NotNull Collection<? extends WootUpgradeItem<?>> getUpgrades() {
+    public @NonNull Collection<? extends WootUpgradeItem<?>> getUpgrades() {
         return wootSpawnProperties.getUpgrades();
     }
 }

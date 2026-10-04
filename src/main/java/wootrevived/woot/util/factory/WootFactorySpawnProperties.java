@@ -13,7 +13,7 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.enums.Tier;
@@ -171,12 +171,12 @@ public class WootFactorySpawnProperties implements WootSpawnProperties {
     }
 
     @Override
-    public @NotNull CompoundTag getSpawnContextData() {
+    public @NonNull CompoundTag getSpawnContextData() {
         return spawnContextData;
     }
 
     @Override
-    public @NotNull Collection<? extends WootUpgradeItem<?>> getUpgrades() {
+    public @NonNull Collection<? extends WootUpgradeItem<?>> getUpgrades() {
         return upgrades;
     }
 }

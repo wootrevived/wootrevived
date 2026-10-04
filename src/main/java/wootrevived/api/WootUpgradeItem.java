@@ -3,10 +3,13 @@ package wootrevived.api;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -209,6 +212,45 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      */
     public @NonNull InteractionResult interact(@NonNull MutableDataComponentHolder dataComponentHolder, @NonNull ItemStack stack, @NonNull Level level, @NonNull Player player, @NonNull InteractionHand hand, @NonNull BlockHitResult hit){
         return InteractionResult.PASS;
+    }
+
+    /**
+     * Indicates whether this upgrade exposes a configuration menu once installed
+     * in a factory upgrade block.
+     *
+     * @return {@code true} when Woot should allow players to open this upgrade's
+     * configuration screen
+     */
+    public boolean hasMenu() {
+        return false;
+    }
+
+    /**
+     * Returns the display name used when this upgrade menu is opened.
+     *
+     * @return the menu title shown to the player
+     */
+    public @NonNull Component getMenuDisplayName() {
+        return Component.empty();
+    }
+
+    /**
+     * Creates the server-side container menu for this installed upgrade.
+     * <p>
+     * The provided {@code itemStack} is a mutable copy of the installed upgrade
+     * stack. Menu implementations should mutate its data components and let
+     * Woot synchronize those component changes back to the server-side installed
+     * stack.
+     *
+     * @param containerId     the vanilla container id
+     * @param blockPos        the factory upgrade block position
+     * @param itemStack       mutable copy of the installed upgrade item stack
+     * @param playerInventory the opening player's inventory
+     * @param player          the opening player
+     * @return a menu instance, or {@code null} when no menu should open
+     */
+    public @Nullable AbstractContainerMenu createMenu(int containerId, @NonNull BlockPos blockPos, @NonNull ItemStack itemStack, @NonNull Inventory playerInventory, @NonNull Player player) {
+        return null;
     }
 
     /**

@@ -2,12 +2,18 @@ package wootrevived.woot.blocks.factory_upgrade;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -19,19 +25,21 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NonNull;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootGenerationProperties;
 import wootrevived.api.interfaces.WootSpawnProperties;
 import wootrevived.woot.Woot;
 import wootrevived.woot.data.FactoryUpgradeData;
+import wootrevived.woot.network.WootUpgradeItemUpdate;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
 import wootrevived.woot.util.block.FactoryBlockBaseEntity;
 
 import java.util.Optional;
 
-public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
+public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity implements MenuProvider {
     public FactoryUpgradeBlockEntity(BlockPos pos, BlockState state) {
         super(BlocksRegistry.FACTORY_UPGRADE_BLOCK_ENTITY.get(), pos, state);
         this.upgradeItem = null;
@@ -144,6 +152,33 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
         Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
     }
 
+    public boolean hasMenu() {
+        return upgradeItem != null && upgradeItem.hasMenu();
+    }
+
+    public void openMenu(ServerPlayer player) {
+        if(!hasMenu())
+            return;
+
+        player.openMenu(this, buf -> {
+            buf.writeBlockPos(getBlockPos());
+            DataComponentPatch.STREAM_CODEC.encode(buf, upgradeStack.getComponentsPatch());
+        });
+    }
+
+    @Override
+    public @NonNull Component getDisplayName() {
+        return upgradeItem == null ? Component.empty() : upgradeItem.getMenuDisplayName();
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(int containerId, @NonNull Inventory playerInventory, @NonNull Player player) {
+        if(upgradeItem == null)
+            return null;
+
+        return upgradeItem.createMenu(containerId, getBlockPos(), upgradeStack.copy(), playerInventory, player);
+    }
+
     private FactoryUpgradeData.Component getComponent(){
         return new FactoryUpgradeData.Component(Optional.ofNullable(getUpgradeItemName()), Optional.of(upgradeStack));
     }
@@ -207,5 +242,29 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
                 level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
             }
         }
+    }
+
+    public void handleNewState(WootUpgradeItemUpdate update) {
+        if(upgradeItem == null || !upgradeItem.hasMenu() || update.componentsPatch().isEmpty())
+            return;
+
+        ItemStack validated = upgradeStack.copy();
+        try {
+            validated.applyComponentsAndValidate(update.componentsPatch());
+        } catch(Exception ignored) {
+            return;
+        }
+
+        if(validated.getItem() != upgradeStack.getItem() || validated.getCount() != upgradeStack.getCount())
+            return;
+
+        upgradeStack.applyComponents(update.componentsPatch());
+        setChanged();
+    }
+
+    public boolean canPlayerAccess(ServerPlayer player) {
+        return !(player.distanceToSqr(getBlockPos().getX() + 0.5,
+                getBlockPos().getY() + 0.5,
+                getBlockPos().getZ() + 0.5) > 64);
     }
 }

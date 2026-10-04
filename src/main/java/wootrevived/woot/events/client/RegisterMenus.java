@@ -11,6 +11,8 @@ import wootrevived.woot.client.render.fluid_infuser.FluidInfuserContainerScreen;
 import wootrevived.woot.client.render.heart.HeartContainerScreen;
 import wootrevived.woot.client.render.item_infuser.ItemInfuserContainerScreen;
 import wootrevived.woot.registries.BlocksRegistry;
+import wootrevived.woot.upgrades.filter.Filter;
+import wootrevived.woot.upgrades.filter.FilterScreen;
 
 @EventBusSubscriber(modid = Woot.MOD_NAMESPACE, value = { Dist.CLIENT })
 public class RegisterMenus {
@@ -21,5 +23,7 @@ public class RegisterMenus {
         event.register(BlocksRegistry.ENCHANTED_LIQUIFIER_BLOCK_MENU.get(), EnchantedLiquifierContainerScreen::new);
         event.register(BlocksRegistry.FLUID_INFUSER_BLOCK_MENU.get(), FluidInfuserContainerScreen::new);
         event.register(BlocksRegistry.HEART_BLOCK_MENU.get(), HeartContainerScreen::new);
+
+        event.register(Filter.FILTER_ITEM_MENU.get(), FilterScreen::new);
     }
 }

@@ -180,7 +180,7 @@ public class HeartContainerScreen extends AbstractContainerScreen<HeartContainer
             entity.sendNewState();
         }));
 
-        redstoneButton.active = false;
+        redstoneButton.active = activeButton != -1;
 
         createButton(PRIMARY_MOB_X, PRIMARY_MOB_Y, HeartContainerMenu.PRIMARY_FAKE_SPAWNER);
         createButton(SECONDARY_MOB_0_X, SECONDARY_MOB_0_Y, HeartContainerMenu.SECONDARY_FAKE_SPAWNER_0);

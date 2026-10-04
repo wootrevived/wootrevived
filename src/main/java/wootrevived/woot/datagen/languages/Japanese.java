@@ -9,6 +9,7 @@ import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
 import wootrevived.woot.upgrades.*;
+import wootrevived.woot.upgrades.filter.Filter;
 
 public class Japanese extends LanguageProvider {
     public Japanese(PackOutput output){
@@ -131,6 +132,9 @@ public class Japanese extends LanguageProvider {
 
         add(Burn.BURN_ITEM.get(), "火属性アップグレード");
         add("info.woot_revived.upgrade.burn.desc.0", "シミュレートされたモブに火を与える");
+
+        add(Filter.FILTER_ITEM.get(), "フィルターアップグレード");
+        add("info.woot_revived.upgrade.filter.desc.0", "生成されるドロップをフィルターする");
 
         add(Dimension.NETHER_DIMENSION_ITEM.get(), "ネザーディメンションアップグレード");
         add(Dimension.END_DIMENSION_ITEM.get(), "エンドディメンションアップグレード");
@@ -280,6 +284,27 @@ public class Japanese extends LanguageProvider {
         add("gui.woot_revived.heart.no_secondary", "2つ以上の疑似スポナーは設置されていません");
         add("gui.woot_revived.heart.vitality_cell_missing", "バイタリティセルがありません");
         add("gui.woot_revived.heart.vitality_cell", "バイタリティセル");
+        add("gui.woot_revived.filter.resource", "アイテム / 液体 / タグ");
+        add("gui.woot_revived.filter.nbt", "NBT");
+        add("gui.woot_revived.filter.item", "アイテム");
+        add("gui.woot_revived.filter.fluid", "液体");
+        add("gui.woot_revived.filter.tag", "タグ");
+        add("gui.woot_revived.filter.exact", "完全一致");
+        add("gui.woot_revived.filter.inverted", "反転");
+        add("gui.woot_revived.filter.not", "%s以外");
+        add("gui.woot_revived.filter.nbt_tags", "NBTタグ: %d");
+        add("gui.woot_revived.filter.exact_nbt", "完全NBT");
+        add("gui.woot_revived.filter.button.add", "追加");
+        add("gui.woot_revived.filter.button.edit", "編集");
+        add("gui.woot_revived.filter.button.remove", "削除");
+        add("gui.woot_revived.filter.button.confirm", "確定");
+        add("gui.woot_revived.filter.button.cancel", "取消");
+        add("gui.woot_revived.filter.nbt.only", "指定したタグだけを照合");
+        add("gui.woot_revived.filter.nbt.exact", "NBTを完全一致で照合");
+        add("gui.woot_revived.filter.mode.whitelist", "フィルター: ホワイトリスト");
+        add("gui.woot_revived.filter.mode.blacklist", "フィルター: ブラックリスト");
+        add("gui.woot_revived.filter.mode.regular", "通常");
+        add("gui.woot_revived.filter.mode.inverted", "反転");
 
         add("jei.woot_revived.shard", "欠片アップグレードがインストールされたファクトリーが生産します。");
         add("jei.woot_revived.anvil.0", "金床を右クリックしてアイテムを置き、");

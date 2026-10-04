@@ -11,7 +11,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import wootrevived.api.WootFactoryMob;
 import wootrevived.api.WootUpgradeItem;
@@ -77,8 +76,8 @@ public interface WootSpawnProperties {
     @NonNull BlockPos getHeartPos();
 
     @ApiStatus.AvailableSince("21.11.1.4")
-    @NotNull CompoundTag getSpawnContextData();
+    @NonNull CompoundTag getSpawnContextData();
 
     @ApiStatus.AvailableSince("21.11.1.4")
-    @NotNull Collection<? extends WootUpgradeItem<?>> getUpgrades();
+    @NonNull Collection<? extends WootUpgradeItem<?>> getUpgrades();
 }
