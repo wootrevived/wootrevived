@@ -5,6 +5,7 @@ import wootrevived.api.registrations.WootFactoryMobRegistration;
 import wootrevived.api.registrations.WootUpgradeItemRegistration;
 import wootrevived.woot.drops.mobs.*;
 import wootrevived.woot.upgrades.*;
+import wootrevived.woot.upgrades.filter.Filter;
 
 public class WootRevivedPlugin implements IWootPlugin {
     @Override
@@ -13,6 +14,7 @@ public class WootRevivedPlugin implements IWootPlugin {
         Decapitate.register(registration);
         Dimension.register(registration);
         Efficiency.register(registration);
+        Filter.register(registration);
         Looting.register(registration);
         Mass.register(registration);
         Rate.register(registration);

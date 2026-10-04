@@ -34,6 +34,7 @@ import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
+import wootrevived.woot.upgrades.filter.FilterScreen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,5 +181,10 @@ public class WootJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(BlocksRegistry.FLUID_INFUSER_BLOCK.get(), WootJeiPluginTypes.FLUID_INFUSER_TYPE);
         registration.addRecipeCatalyst(BlocksRegistry.ITEM_INFUSER_BLOCK.get(), WootJeiPluginTypes.ITEM_INFUSER_TYPE);
         registration.addRecipeCatalyst(BlocksRegistry.ENCHANTED_LIQUIFIER_BLOCK.get(), WootJeiPluginTypes.ENCHANTED_LIQUIFIER_TYPE);
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addGhostIngredientHandler(FilterScreen.class, new WootFilterScreenGhostIngredientHandler());
     }
 }

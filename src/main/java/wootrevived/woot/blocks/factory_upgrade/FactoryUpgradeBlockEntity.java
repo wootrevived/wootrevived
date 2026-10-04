@@ -6,10 +6,15 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -18,18 +23,21 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import wootrevived.api.WootUpgradeItem;
 import wootrevived.api.interfaces.WootDropsProperties;
 import wootrevived.api.interfaces.WootGenerationProperties;
 import wootrevived.api.interfaces.WootSpawnProperties;
 import wootrevived.woot.client.model.factory_upgrade.FactoryUpgradeBakedModel;
+import wootrevived.woot.network.WootUpgradeItemUpdate;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
 import wootrevived.woot.util.block.FactoryBlockBaseEntity;
 import wootrevived.woot.util.entity.WootTags;
 
-public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
+public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity implements MenuProvider {
     public FactoryUpgradeBlockEntity(BlockPos pos, BlockState state) {
         super(BlocksRegistry.FACTORY_UPGRADE_BLOCK_ENTITY.get(), pos, state);
         this.upgradeItem = null;
@@ -154,6 +162,33 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
         Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), stack);
     }
 
+    public boolean hasMenu() {
+        if(upgradeItem == null)
+            return false;
+
+        return upgradeItem.hasMenu();
+    }
+
+    public void openMenu(ServerPlayer player) {
+        if(upgradeItem == null)
+            return;
+
+        NetworkHooks.openScreen(player, this, buf -> {
+            buf.writeBlockPos(getBlockPos());
+            buf.writeNbt(upgradeStack.getOrCreateTag());
+        });
+    }
+
+    @Override
+    public @NotNull Component getDisplayName() {
+        return upgradeItem == null ? Component.empty() : upgradeItem.getMenuDisplayName();
+    }
+
+    @Override
+    public @Nullable AbstractContainerMenu createMenu(int containerId, @NotNull Inventory playerInventory, @NotNull Player player) {
+        return upgradeItem == null ? null : upgradeItem.createMenu(containerId, getBlockPos(), upgradeStack.getOrCreateTag(), playerInventory, player);
+    }
+
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag){
         super.saveAdditional(tag);
@@ -230,5 +265,16 @@ public class FactoryUpgradeBlockEntity extends FactoryBlockBaseEntity {
                 level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
             }
         }
+    }
+
+    public void handleNewState(WootUpgradeItemUpdate update){
+        upgradeStack.setTag(update.itemTag());
+        setChanged();
+    }
+
+    public boolean canPlayerAccess(ServerPlayer player) {
+        return !(player.distanceToSqr(getBlockPos().getX() + 0.5,
+                getBlockPos().getY() + 0.5,
+                getBlockPos().getZ() + 0.5) > 64);
     }
 }

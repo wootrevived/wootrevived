@@ -17,6 +17,7 @@ import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
 import wootrevived.woot.upgrades.*;
+import wootrevived.woot.upgrades.filter.Filter;
 
 import java.util.Objects;
 
@@ -136,6 +137,8 @@ public class Items extends ItemModelProvider {
         itemGenerated(Efficiency.GOLD_EFFICIENCY_ITEM);
         itemGenerated(Efficiency.DIAMOND_EFFICIENCY_ITEM);
         itemGenerated(Efficiency.NETHERITE_EFFICIENCY_ITEM);
+
+        itemGenerated(Filter.FILTER_ITEM);
 
         itemGenerated(Looting.COPPER_LOOTING_ITEM);
         itemGenerated(Looting.IRON_LOOTING_ITEM);

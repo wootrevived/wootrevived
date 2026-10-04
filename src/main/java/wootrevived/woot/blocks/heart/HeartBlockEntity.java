@@ -5,6 +5,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -36,6 +39,7 @@ import wootrevived.woot.drops.simulator.DropSimulator;
 import wootrevived.woot.multiblock.MultiBlockFactoryEntity;
 import wootrevived.woot.multiblock.patterns.Pattern;
 import wootrevived.woot.multiblock.patterns.Patterns;
+import wootrevived.woot.network.WootOpenUpgradeMenu;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.WootFactoryMobsRegistry;
 import wootrevived.woot.util.factory.*;
@@ -344,5 +348,22 @@ public class HeartBlockEntity extends MultiBlockFactoryEntity implements MenuPro
     @Override
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
+    }
+
+    public void handleUpgradeMenu(ServerPlayer player, WootOpenUpgradeMenu menu){
+        if(menu.slot() < 0 || menu.slot() >= upgrades.length)
+            return;
+
+        FactoryUpgradeBlockEntity entity = upgrades[menu.slot()];
+        if(entity != null && entity.hasMenu()){
+            player.playNotifySound(SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.MASTER, 1.0F, 1.0F);
+            entity.openMenu(player);
+        }
+    }
+
+    public boolean canPlayerAccess(ServerPlayer player) {
+        return !(player.distanceToSqr(getBlockPos().getX() + 0.5,
+                getBlockPos().getY() + 0.5,
+                getBlockPos().getZ() + 0.5) > 64);
     }
 }

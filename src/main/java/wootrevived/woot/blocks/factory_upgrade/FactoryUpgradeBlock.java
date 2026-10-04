@@ -3,6 +3,7 @@ package wootrevived.woot.blocks.factory_upgrade;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -19,8 +20,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import wootrevived.api.WootUpgradeItem;
+import wootrevived.woot.blocks.heart.HeartBlockEntity;
 import wootrevived.woot.util.block.FactoryBlockBase;
 
 import java.util.function.Supplier;
@@ -62,21 +65,25 @@ public class FactoryUpgradeBlock extends FactoryBlockBase {
             if(!getValue(BlockStateProperties.ENABLED))
                 return super.use(level, player, hand, hit);
 
-            BlockEntity blockEntity = level.getBlockEntity(hit.getBlockPos());
-            if (!level.isClientSide && blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity) {
-                ItemStack stack = player.getItemInHand(hand);
-                if(stack.isEmpty() && player.isShiftKeyDown()){
-                    factoryUpgradeBlockEntity.removeUpgrade(level, player, hand);
-                    return InteractionResult.SUCCESS;
-                } else if (!stack.isEmpty() && stack.getItem() instanceof WootUpgradeItem<?> upgradeItem) {
-                    factoryUpgradeBlockEntity.addUpgrade(level, player, hand, stack, upgradeItem);
-                    return InteractionResult.SUCCESS;
-                } else {
-                    return factoryUpgradeBlockEntity.interactUpgrade(level, player, hand, hit);
-                }
+            if (level.isClientSide)
+                return InteractionResult.SUCCESS;
+
+            if (!(level.getBlockEntity(hit.getBlockPos()) instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity))
+                throw new IllegalStateException("BlockEntity is missing");
+
+            ItemStack stack = player.getItemInHand(hand);
+            if(stack.isEmpty() && player.isShiftKeyDown()){
+                factoryUpgradeBlockEntity.removeUpgrade(level, player, hand);
+                return InteractionResult.SUCCESS;
+            } else if (!stack.isEmpty() && stack.getItem() instanceof WootUpgradeItem<?> upgradeItem) {
+                factoryUpgradeBlockEntity.addUpgrade(level, player, hand, stack, upgradeItem);
+                return InteractionResult.SUCCESS;
+            } else if (stack.isEmpty() && factoryUpgradeBlockEntity.hasMenu()) {
+                factoryUpgradeBlockEntity.openMenu((ServerPlayer) player);
+                return InteractionResult.SUCCESS;
             }
 
-            return super.use(level, player, hand, hit);
+            return factoryUpgradeBlockEntity.interactUpgrade(level, player, hand, hit);
         }
 
         @Override

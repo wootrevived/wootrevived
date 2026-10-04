@@ -20,6 +20,8 @@ import wootrevived.woot.blocks.cell.CellBlockEntity;
 import wootrevived.woot.blocks.factory_upgrade.FactoryUpgradeBlockEntity;
 import wootrevived.woot.blocks.fake_spawner.FakeSpawnerBlockEntity;
 import wootrevived.woot.blocks.heart.HeartBlockEntity;
+import wootrevived.woot.network.NetworkChannel;
+import wootrevived.woot.network.WootOpenUpgradeMenu;
 import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.util.render.WootSlot;
 import wootrevived.woot.util.render.WootSlotItemHandler;
@@ -38,6 +40,7 @@ public class HeartContainerMenu extends AbstractContainerMenu {
 
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate){
+            NetworkChannel.channel.sendToServer(new WootOpenUpgradeMenu(blockEntity.getBlockPos(), slot));
             return ItemStack.EMPTY;
         }
 
