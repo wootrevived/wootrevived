@@ -3,13 +3,9 @@ package wootrevived.woot.compat.jei;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.helpers.IColorHelper;
-import mezz.jei.api.ingredients.subtypes.ISubtypeManager;
 import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.registration.*;
-import mezz.jei.common.util.StackHelper;
-import mezz.jei.library.plugins.vanilla.ingredients.ItemStackHelper;
-import mezz.jei.library.render.ItemStackRenderer;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -41,6 +37,7 @@ import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
+import wootrevived.woot.upgrades.filter.FilterScreen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,8 +57,7 @@ public class WootJeiPlugin implements IModPlugin {
             registration.registerSubtypeInterpreter(entry.item().get(), UpgradeSubtypeInterpreter.INSTANCE);
     }
 
-    @Override
-    public void registerIngredients(@NotNull IModIngredientRegistration registration) {
+    private List<ItemStack> getUpgradeVariantStacks(){
         List<ItemStack> stacks = new ArrayList<>();
 
         for(UpgradeItemsRegistry.DynamicEntry<?> entry : UpgradeItemsRegistry.getDynamicEntries()){
@@ -72,17 +68,12 @@ public class WootJeiPlugin implements IModPlugin {
             }
         }
 
-        ISubtypeManager subtypeManager = registration.getSubtypeManager();
-        StackHelper stackHelper = new StackHelper(subtypeManager);
-        IColorHelper colorHelper = registration.getColorHelper();
-        ItemStackHelper itemStackHelper = new ItemStackHelper(stackHelper, colorHelper);
-        ItemStackRenderer itemStackRenderer = new ItemStackRenderer();
-        registration.register(
-                VanillaTypes.ITEM_STACK,
-                stacks,
-                itemStackHelper,
-                itemStackRenderer
-        );
+        return stacks;
+    }
+
+    @Override
+    public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
+        jeiRuntime.getIngredientManager().addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, getUpgradeVariantStacks());
     }
 
     @Override
@@ -198,5 +189,10 @@ public class WootJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(BlocksRegistry.FLUID_INFUSER_BLOCK_ITEM.get().getDefaultInstance(), WootJeiPluginTypes.FLUID_INFUSER_TYPE);
         registration.addRecipeCatalyst(BlocksRegistry.ITEM_INFUSER_BLOCK_ITEM.get().getDefaultInstance(), WootJeiPluginTypes.ITEM_INFUSER_TYPE);
         registration.addRecipeCatalyst(BlocksRegistry.ENCHANTED_LIQUIFIER_BLOCK_ITEM.get().getDefaultInstance(), WootJeiPluginTypes.ENCHANTED_LIQUIFIER_TYPE);
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addGhostIngredientHandler(FilterScreen.class, new WootFilterScreenGhostIngredientHandler());
     }
 }

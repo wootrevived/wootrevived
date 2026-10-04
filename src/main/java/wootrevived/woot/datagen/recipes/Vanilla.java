@@ -12,6 +12,7 @@ import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
 import wootrevived.woot.upgrades.*;
+import wootrevived.woot.upgrades.filter.Filter;
 
 public class Vanilla {
     public static void registerRecipes(Recipes recipes, RecipeOutput output){
@@ -997,6 +998,19 @@ public class Vanilla {
                 .group(Woot.MOD_ID)
                 .unlockedBy("a", recipes.hasItem(Items.FIRE_CHARGE))
                 .unlockedBy("b", recipes.hasItem(Items.LAVA_BUCKET))
+                .unlockedBy("c", recipes.hasItem(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get()))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Filter.FILTER_ITEM.get())
+                .pattern("bab")
+                .pattern("aca")
+                .pattern("bab")
+                .define('a', Items.HOPPER)
+                .define('b', Items.COMPARATOR)
+                .define('c', UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get())
+                .group(Woot.MOD_ID)
+                .unlockedBy("a", recipes.hasItem(Items.HOPPER))
+                .unlockedBy("b", recipes.hasItem(Items.COMPARATOR))
                 .unlockedBy("c", recipes.hasItem(UpgradeItemsRegistry.UPGRADE_BASE_ITEM.get()))
                 .save(output);
 

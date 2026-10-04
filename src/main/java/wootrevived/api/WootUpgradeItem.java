@@ -8,10 +8,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -98,6 +101,9 @@ import java.util.Optional;
  *     <li>{@link #applySpawnProperties}</li>
  *     <li>{@link #modifyDrops}</li>
  *     <li>{@link #interact}</li>
+ *     <li>{@link #hasMenu}</li>
+ *     <li>{@link #getMenuDisplayName}</li>
+ *     <li>{@link #createMenu}</li>
  *     <li>{@link #initItemTag}</li>
  *     <li>{@link #deinitItemTag}</li>
  * </ul>
@@ -218,8 +224,60 @@ public abstract class WootUpgradeItem<T extends Enum<T> & WootUpgradeEnum<T>> ex
      *
      * @return an {@link InteractionResult} indicating whether the action was handled
      */
-    public @NotNull InteractionResult interact(@NotNull CompoundTag itemTag, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit){
+    public @NotNull InteractionResult interact(@NotNull CompoundTag itemTag, @NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         return InteractionResult.PASS;
+    }
+
+    /**
+     * Returns whether this upgrade exposes a configuration menu while installed
+     * in a factory upgrade block.
+     * <p>
+     * When this returns {@code true}, Woot may open the menu from supported UI
+     * entry points, such as the factory heart upgrade slots or direct
+     * interaction with the upgrade block. Subclasses that return {@code true}
+     * should also override {@link #getMenuDisplayName()} and
+     * {@link #createMenu(int, BlockPos, CompoundTag, Inventory, Player)}.
+     *
+     * @return {@code true} if this upgrade provides a menu, otherwise {@code false}
+     */
+    public boolean hasMenu() {
+        return false;
+    }
+
+    /**
+     * Returns the title displayed for this upgrade's configuration menu.
+     * <p>
+     * This is only used when {@link #hasMenu()} returns {@code true}. The
+     * returned component should usually be translatable so resource packs and
+     * language providers can localize the menu title.
+     *
+     * @return the display name used by the upgrade menu
+     */
+    public @NotNull Component getMenuDisplayName() {
+        return Component.empty();
+    }
+
+    /**
+     * Creates the server-side menu for this upgrade's configuration screen.
+     * <p>
+     * The supplied {@code itemTag} is the persistent NBT stored on the installed
+     * upgrade item stack. Menu implementations may read and mutate this tag, then
+     * synchronize changes through their own menu logic. For menus based on
+     * {@link wootrevived.api.menus.WootUpgradeItemMenu}, call
+     * {@code syncItemTag()} after applying a client-side configuration change.
+     * <p>
+     * This method is only called when {@link #hasMenu()} returns {@code true}.
+     * Returning {@code null} prevents the menu from opening.
+     *
+     * @param containerId     the vanilla container id assigned for this menu
+     * @param blockPos        the position of the factory upgrade block containing this item
+     * @param itemTag         persistent per-upgrade item data
+     * @param playerInventory the opening player's inventory
+     * @param player          the player opening the menu
+     * @return a new menu instance, or {@code null} if no menu should be opened
+     */
+    public @Nullable AbstractContainerMenu createMenu(int containerId, BlockPos blockPos, @NotNull CompoundTag itemTag, @NotNull Inventory playerInventory, @NotNull Player player) {
+        return null;
     }
 
     /**
