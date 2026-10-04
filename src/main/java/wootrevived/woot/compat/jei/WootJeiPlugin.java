@@ -35,6 +35,7 @@ import wootrevived.woot.registries.BlocksRegistry;
 import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
+import wootrevived.woot.upgrades.filter.FilterScreen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,6 +71,11 @@ public class WootJeiPlugin implements IModPlugin {
             stack.set(WootUpgradeComponent.type(), WootUpgradeComponent.of(constant));
             stacks.add(stack);
         }
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addGhostIngredientHandler(FilterScreen.class, new WootFilterScreenGhostIngredientHandler());
     }
 
     @Override

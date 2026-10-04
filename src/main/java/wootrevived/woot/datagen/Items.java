@@ -17,6 +17,7 @@ import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
 import wootrevived.woot.upgrades.*;
+import wootrevived.woot.upgrades.filter.Filter;
 
 import java.util.Objects;
 
@@ -173,6 +174,8 @@ public class Items extends ItemModelProvider {
         itemGenerated(ShardDrop.NETHERITE_SHARD_DROP_ITEM);
 
         itemGenerated(Burn.BURN_ITEM);
+
+        itemGenerated(Filter.FILTER_ITEM);
 
         itemGenerated(Dimension.NETHER_DIMENSION_ITEM);
         itemGenerated(Dimension.END_DIMENSION_ITEM);

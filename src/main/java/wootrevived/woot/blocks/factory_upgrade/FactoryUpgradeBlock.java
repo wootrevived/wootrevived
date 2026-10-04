@@ -8,6 +8,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -64,12 +65,22 @@ public class FactoryUpgradeBlock extends FactoryBlockBase {
                 return super.useItemOn(stack, level, player, hand, hit);
 
             BlockEntity blockEntity = level.getBlockEntity(hit.getBlockPos());
+            if (level.isClientSide) {
+                if((stack.isEmpty() && player.isShiftKeyDown()) || stack.getItem() instanceof WootUpgradeItem<?> || stack.isEmpty())
+                    return ItemInteractionResult.SUCCESS;
+
+                return super.useItemOn(stack, level, player, hand, hit);
+            }
+
             if (!level.isClientSide && blockEntity instanceof FactoryUpgradeBlockEntity factoryUpgradeBlockEntity) {
                 if(stack.isEmpty() && player.isShiftKeyDown()){
                     factoryUpgradeBlockEntity.removeUpgrade(level, player, hand);
                     return ItemInteractionResult.SUCCESS;
                 } else if (!stack.isEmpty() && stack.getItem() instanceof WootUpgradeItem<?> upgradeItem) {
                     factoryUpgradeBlockEntity.addUpgrade(level, player, hand, stack, upgradeItem);
+                    return ItemInteractionResult.SUCCESS;
+                } else if(stack.isEmpty() && factoryUpgradeBlockEntity.hasMenu() && player instanceof ServerPlayer serverPlayer) {
+                    factoryUpgradeBlockEntity.openMenu(serverPlayer);
                     return ItemInteractionResult.SUCCESS;
                 } else {
                     return factoryUpgradeBlockEntity.interactUpgrade(stack, level, player, hand, hit);

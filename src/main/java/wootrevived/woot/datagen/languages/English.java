@@ -8,6 +8,7 @@ import wootrevived.woot.registries.FluidsRegistry;
 import wootrevived.woot.registries.ItemsRegistry;
 import wootrevived.woot.registries.UpgradeItemsRegistry;
 import wootrevived.woot.upgrades.*;
+import wootrevived.woot.upgrades.filter.Filter;
 
 public class English extends LanguageProvider {
     public English(PackOutput output){
@@ -130,6 +131,9 @@ public class English extends LanguageProvider {
 
         add(Burn.BURN_ITEM.get(), "Burn Upgrade");
         add("info.woot_revived.upgrade.burn.desc.0", "Apply fire to the simulated mob");
+
+        add(Filter.FILTER_ITEM.get(), "Filter Upgrade");
+        add("info.woot_revived.upgrade.filter.desc.0", "Filter generated drops");
 
         add(Dimension.NETHER_DIMENSION_ITEM.get(), "Nether Dimension Upgrade");
         add(Dimension.END_DIMENSION_ITEM.get(), "End Dimension Upgrade");
@@ -279,6 +283,27 @@ public class English extends LanguageProvider {
         add("gui.woot_revived.heart.no_secondary", "No secondary fake spawner placed");
         add("gui.woot_revived.heart.vitality_cell_missing", "Vitality Cell is missing");
         add("gui.woot_revived.heart.vitality_cell", "Vitality Cell");
+        add("gui.woot_revived.filter.resource", "Item / Fluid / Tag");
+        add("gui.woot_revived.filter.nbt", "NBT");
+        add("gui.woot_revived.filter.item", "Item");
+        add("gui.woot_revived.filter.fluid", "Fluid");
+        add("gui.woot_revived.filter.tag", "Tag");
+        add("gui.woot_revived.filter.exact", "Exact");
+        add("gui.woot_revived.filter.inverted", "Inverted");
+        add("gui.woot_revived.filter.not", "Not %s");
+        add("gui.woot_revived.filter.nbt_tags", "NBT Tags: %d");
+        add("gui.woot_revived.filter.exact_nbt", "Exact NBT");
+        add("gui.woot_revived.filter.button.add", "Add");
+        add("gui.woot_revived.filter.button.edit", "Edit");
+        add("gui.woot_revived.filter.button.remove", "Remove");
+        add("gui.woot_revived.filter.button.confirm", "Confirm");
+        add("gui.woot_revived.filter.button.cancel", "Cancel");
+        add("gui.woot_revived.filter.nbt.only", "Match only provided tags");
+        add("gui.woot_revived.filter.nbt.exact", "Match exact NBT data");
+        add("gui.woot_revived.filter.mode.whitelist", "Filter Mode: Whitelist");
+        add("gui.woot_revived.filter.mode.blacklist", "Filter Mode: Blacklist");
+        add("gui.woot_revived.filter.mode.regular", "Regular");
+        add("gui.woot_revived.filter.mode.inverted", "Inverted");
 
         add("jei.woot_revived.shard", "Generated from the factory with the Shard Drop upgrade installed.");
         add("jei.woot_revived.anvil.0", "Add item by right clicking on the anvil.");

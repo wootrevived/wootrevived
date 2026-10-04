@@ -8,6 +8,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import wootrevived.api.internal.WootUpgradeComponent;
 import wootrevived.woot.Woot;
 import wootrevived.woot.data.*;
+import wootrevived.woot.upgrades.filter.FilterLogic;
 
 public class ComponentsRegistry {
     public static final DeferredRegister.DataComponents COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, Woot.MOD_ID);
@@ -20,6 +21,14 @@ public class ComponentsRegistry {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<WootUpgradeComponent>> WOOT_UPGRADE_COMPONENT =
             COMPONENTS.register(WootUpgradeComponent.ID, WootUpgradeComponent::type);
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<FilterLogic.Component>> FILTER_LOGIC_DATA =
+            COMPONENTS.registerComponentType(
+                    FilterLogic.ID,
+                    builder -> builder
+                            .persistent(FilterLogic.Component.CODEC)
+                            .networkSynchronized(FilterLogic.Component.STREAM_CODEC)
+            );
 
     /* Block Entity Data */
 
